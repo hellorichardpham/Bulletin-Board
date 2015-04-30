@@ -14,7 +14,10 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="156dp"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:maxLines = "5"
+        android:scrollbars = "vertical"
+        />
 
     <Button
         android:layout_width="wrap_content"
@@ -28,7 +31,7 @@
         android:layout_alignParentStart="true"
         android:layout_marginLeft="51dp"
         android:layout_marginStart="51dp"
-        android:layout_marginTop="47dp" />
+        android:layout_marginTop="57dp" />
 
     <ListView
         android:layout_width="wrap_content"
@@ -50,13 +53,25 @@
         android:layout_marginEnd="48dp"
         android:layout_alignTop="@+id/button"
         android:layout_alignRight="@+id/editText"
+        android:layout_below="@+id/editText"
         android:layout_alignEnd="@+id/editText" />
-		
-	<ProgressBar
-		android:id="@+id/progressBar1"
-		style="?android:attr/progressBarStyleLarge"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_centerHorizontal="true" />
+
+    <ProgressBar
+        android:id="@+id/progressBar1"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/locationView"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:nestedScrollingEnabled="false"
+        android:textIsSelectable="false"
+        android:textSize="@dimen/abc_text_size_body_1_material" />
 
 </RelativeLayout>

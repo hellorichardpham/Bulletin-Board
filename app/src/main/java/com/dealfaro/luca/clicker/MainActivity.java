@@ -8,6 +8,7 @@ import android.location.LocationListener;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -106,24 +107,8 @@ public class MainActivity extends ActionBarActivity {
 
             // Fills in the view.
             TextView tv = (TextView) newView.findViewById(R.id.itemText);
-           // Button b = (Button) newView.findViewById(R.id.itemButton);
+            tv.setMovementMethod(new ScrollingMovementMethod());
             tv.setText(w.textLabel);
-            //b.setText(w.buttonLabel);
-
-            // Sets a listener for the button, and a tag for the button as well.
-            //b.setTag(new Integer(position));
-           /* b.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // Reacts to a button press.
-                    // Gets the integer tag of the button.
-                    String s = v.getTag().toString();
-                    int duration = Toast.LENGTH_SHORT;
-                    Toast toast = Toast.makeText(context, s + "WOW", duration);
-                    toast.show();
-                }
-            });
-            */
 
             // Set a listener for the whole list item.
             newView.setTag(w.textLabel);
@@ -152,7 +137,7 @@ public class MainActivity extends ActionBarActivity {
         aa = new MyAdapter(this, R.layout.list_element, aList);
         ListView myListView = (ListView) findViewById(R.id.listView);
         myListView.setAdapter(aa);
-
+        TextView locationView = (TextView) findViewById(R.id.locationView);
         spinner = (ProgressBar)findViewById(R.id.progressBar1);
         spinner.setVisibility(View.GONE);
         aa.notifyDataSetChanged();
@@ -186,6 +171,12 @@ public class MainActivity extends ActionBarActivity {
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
         lastLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        String lat = String.format("%.3f", lastLocation.getLatitude());
+        String lng = String.format("%.3f", lastLocation.getLongitude());
+        TextView locationView = (TextView) findViewById(R.id.locationView);
+        String locationString = "Latitude: " + lat + " Longitude: "
+                + lng + " Accuracy: " + lastLocation.getAccuracy() + " meters";
+        locationView.setText(locationString);
     }
 
 
@@ -211,9 +202,13 @@ public class MainActivity extends ActionBarActivity {
             lastLocation = location;
             int duration = Toast.LENGTH_SHORT;
             Context context = getApplicationContext();
-            String locationString = "Lat: " + lat + " Long: "
+            String locationToastString = "Location Changed:\n" + "Latitude: " + lat + " Longitude: "
                     + lng;
-            Toast toast = Toast.makeText(context, locationString, duration);
+            String locationString = "Latitude: " + lat + " Longitude: "
+                    + lng + " Accuracy: " + lastLocation.getAccuracy() + " meters";
+            Toast toast = Toast.makeText(context, locationToastString, duration);
+            TextView locationView = (TextView) findViewById(R.id.locationView);
+            locationView.setText(locationString);
             toast.show();
 
         }
@@ -331,13 +326,15 @@ public class MainActivity extends ActionBarActivity {
         //Set the attributes of the ListElement using
         //the gson attributes. Then add to list.
         final int MAXIMUM_MESSAGES = 10;
-        for (int i = 0; i < ml.messages.length && i <= MAXIMUM_MESSAGES; i++) {
+        for (int i = 0; i < ml.messages.length && aList.size() < MAXIMUM_MESSAGES; i++) {
             ListElement ael = new ListElement();
-            if(!ml.messages[i].msg.equals("")) {
-                ael.textLabel = ml.messages[i].getTimedMessage();
-                //ael.buttonLabel = "Click";
-                aList.add(ael);
-            }
+            //Some message fields are equal to null, so check beforehand.
+            //Otherwise we'd check if null.equals("");
+                if (ml.messages[i].msg != null && !ml.messages[i].msg.equals("")) {
+                    ael.textLabel = ml.messages[i].getTimedMessage();
+                    //ael.buttonLabel = "Click";
+                    aList.add(ael);
+                }
         }
         aa.notifyDataSetChanged();
         spinner.setVisibility(View.GONE);

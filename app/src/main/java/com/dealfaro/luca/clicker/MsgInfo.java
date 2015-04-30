@@ -19,31 +19,31 @@ public class MsgInfo {
     String ts;
     public MsgInfo() {}
 
-    private String getRelevantTimeDiff(String ts){
+    private String getRelevantTimeDiff(String timeStamp){
         DateFormat targetFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
         targetFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+        SimpleDateFormat output = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         Date timestampDate;
-
         //parse date.
         //this can easily throw a ParseException so you should probably catch that
         try {
-            timestampDate = targetFormat.parse("2015-04-28T03:53:45.426040");
+            timestampDate = targetFormat.parse(timeStamp);
+            timeStamp = output.format(timestampDate);
+            return timeStamp;
         } catch(Exception e) {
             System.out.println(e.getMessage());
         }
-        //Get current UTC time
-        Date now = new Date();
 
+        return "Error";
 	/*
 	//Then just calculate the difference between the dates (remember dates are in
 	//milliseconds, so divide by 1000 at some point) and do some math and stuff
 	//to figure out what to display as the human readable time difference
 	*/
-    return "Error";
     }
     public String getTimedMessage() {
-        //ts = getRelevantTimeDiff(ts);
+        ts = getRelevantTimeDiff(ts);
         return ts + " " + msg;
     }
 }
