@@ -180,7 +180,6 @@ public class MainActivity extends ActionBarActivity {
     }
 
 
-
     @Override
     protected void onPause() {
         LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
@@ -197,22 +196,42 @@ public class MainActivity extends ActionBarActivity {
     LocationListener locationListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
+            TextView locationView = (TextView) findViewById(R.id.locationView);
             String lat = String.format("%.3f", location.getLatitude());
             String lng = String.format("%.3f", location.getLongitude());
             lastLocation = location;
-            int duration = Toast.LENGTH_SHORT;
-            Context context = getApplicationContext();
-            String locationToastString = "Location Changed:\n" + "Latitude: " + lat + " Longitude: "
-                    + lng;
             String locationString = "Latitude: " + lat + " Longitude: "
                     + lng + " Accuracy: " + lastLocation.getAccuracy() + " meters";
-            Toast toast = Toast.makeText(context, locationToastString, duration);
-            TextView locationView = (TextView) findViewById(R.id.locationView);
             locationView.setText(locationString);
-            toast.show();
+
+            //Only display the toast if up to the 1000th digit has changed to
+            //Prevent toasts from displaying due to accuracy changes
+            if(isBigLocationChange(lastLocation, location)) {
+                int duration = Toast.LENGTH_SHORT;
+                Context context = getApplicationContext();
+                String locationToastString = "Location Changed:\n" + "Latitude: " + lat + " Longitude: "
+                        + lng;
+                Toast toast = Toast.makeText(context, locationToastString, duration);
+                toast.show();
+            }
+
 
         }
-
+        //Problem: Toast would occur for slight location changes due to accuracy (.0000###)
+        //where ### is only changing due to GPS signal. This method only checks if the
+        //10000th place has changed as to stop unnecessary toasts showing
+        public boolean isBigLocationChange(Location currentLocation, Location newLocation) {
+            //Parse the coordinates down to 4 decimal places
+            String currentLat = String.format("%.4f", currentLocation.getLatitude());
+            String currentLng = String.format("%.4f", currentLocation.getLongitude());
+            String newLat = String.format("%.4f", newLocation.getLatitude());
+            String newLng = String.format("%.4f", newLocation.getLongitude());
+            System.out.println(currentLat + " " + currentLng + " " + newLat + " " + newLng);
+            if (currentLat.equals(newLat) && currentLng.equals(newLng)) {
+                return false;
+            }
+            return true; //One of them didn't match
+        }
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {}
 
