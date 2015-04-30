@@ -1,4 +1,4 @@
-package com.dealfaro.luca.clicker;
+package com.pham.richard.bulletinboard;
 
 import android.os.AsyncTask;
 import android.util.Log;

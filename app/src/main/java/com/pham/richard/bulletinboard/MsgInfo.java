@@ -1,4 +1,4 @@
-package com.dealfaro.luca.clicker;
+package com.pham.richard.bulletinboard;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

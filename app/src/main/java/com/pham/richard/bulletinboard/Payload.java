@@ -1,4 +1,4 @@
-package com.dealfaro.luca.clicker;
+package com.pham.richard.bulletinboard;
 
 /**
  * Created by luca on 3/4/2015.
